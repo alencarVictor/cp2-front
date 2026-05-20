@@ -1,69 +1,57 @@
-// Seleciona o campo de exibição
-const display = document.getElementById('result');
+const painel = document.getElementById('result');
 
-// Função para adicionar números e operadores ao visor
 function digit(value) {
-    // Substitui o 'x' visual pelo '*' matemático para o cálculo
     if (value === 'x') {
-        display.value += '*';
+        painel.value += '*';
     } else {
-        display.value += value;
+        painel.value += value;
     }
 }
 
-// Função para limpar tudo
-function clearAll() {
-    display.value = '';
-}
-
-// Função para adicionar o ponto decimal (evita múltiplos pontos no mesmo número)
-function addFloat() {
-    const currentVal = display.value;
-    const lastPart = currentVal.split(/[\+\-\*\/]/).pop(); // Pega o último número digitado
-
-    if (!lastPart.includes('.')) {
-        display.value += '.';
-    }
-}
-
-// Função para calcular o resultado
 function equals() {
-    try {
-        // eval() processa a string como uma conta matemática
-        // Se o visor estiver vazio, não faz nada
-        if (display.value !== "") {
-            display.value = eval(display.value);
+    try {    
+        if (painel.value !== "") {
+            painel.value = eval(painel.value);
         }
     } catch (error) {
-        // Caso a conta esteja errada (ex: "5++5") mostra erro
-        display.value = "Erro";
-        setTimeout(clearAll, 1500); // Limpa após 1.5s
+        painel.value = "Erro";
+    }
+}
+
+function clearAll() {
+    painel.value = '';
+}
+
+function addFloat() {
+    const valorAtual = painel.value;
+    const ultimoNum = valorAtual.split(/[\+\-\*\/]/).pop();
+
+    if (!ultimoNum.includes('.')) {
+        painel.value += '.';
     }
 }
 
 document.addEventListener('keydown', (event) => {
     const key = event.key;
 
-    // Números de 0-9 e operadores básicos
     if (/[0-9]/.test(key)) {
         digit(key);
     } else if (key === '+') {
         digit('+');
     } else if (key === '-') {
         digit('-');
-    } else if (key === '*' || key.toLowerCase() === 'x') {
+    } else if (key === '*' ||key === 'x') {
         digit('x');
     } else if (key === '/') {
         digit('/');
-    } else if (key === '.' || key === ',') {
+    } else if (key === '.'|| key === ',') {
         addFloat();
     } else if (key === 'Enter' || key === '=') {
-        event.preventDefault(); // Evita comportamento padrão do navegador
+        event.preventDefault();
         equals();
-    } else if (key === 'Escape' || key.toLowerCase() === 'c') {
+    } else if (key === 'Escape') {
         clearAll();
     } else if (key === 'Backspace') {
-        // Apaga o último caractere (extra para usabilidade)
-        display.value = display.value.slice(0, -1);
+        painel.value = painel.value.slice(0, -1);
     }
 });
